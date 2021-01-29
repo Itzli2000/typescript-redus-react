@@ -20,7 +20,9 @@
     "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
-    "eject": "react-scripts eject"
+    "eject": "react-scripts eject",
+    "json-server": "json-server --watch json-server/db.json --port 3001",
+    "dev": "concurrently -k \"npm run json-server\" \"npm start\""
   },
   "eslintConfig": {
     "extends": [
@@ -43,6 +45,7 @@
   "devDependencies": {
     "@typescript-eslint/eslint-plugin": "^4.14.1",
     "@typescript-eslint/parser": "^4.14.1",
+    "concurrently": "^5.3.0",
     "eslint": "^7.18.0",
     "eslint-config-airbnb": "^18.2.1",
     "eslint-plugin-import": "^2.22.1",
