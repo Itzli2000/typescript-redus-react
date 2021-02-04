@@ -151,6 +151,46 @@ DelteRequestAction | DelteSuccessAction | DelteFailureAction
   }
 };
 
+const UPDATE_REQUERST = 'userEvents/update_request';
+const UPDATE_SUCCESS = 'userEvents/update_success';
+const UPDATE_FAILURE = 'userEvents/update_failure';
+
+interface UpdateRequestAction extends Action<typeof UPDATE_REQUERST> {}
+interface UpdateFailureAction extends Action<typeof UPDATE_FAILURE> {}
+interface UpdateSuccessAction extends Action<typeof UPDATE_SUCCESS> {
+  payload: {event: UserEvent}
+}
+
+export const updateUserEvent = (event: UserEvent): ThunkAction<
+Promise<void>,
+RooState,
+undefined,
+UpdateRequestAction | UpdateSuccessAction | UpdateFailureAction
+> => async (dispatch) => {
+  dispatch({
+    type: UPDATE_REQUERST,
+  });
+
+  try {
+    const response = await fetch(`http://localhost:3001/events/${event.id}`, {
+      method: 'PUT',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(event),
+    });
+
+    const updatedEvent: UserEvent = await response.json();
+
+    dispatch({
+      type: UPDATE_SUCCESS,
+      payload: { event: updatedEvent },
+    });
+  } catch (error) {
+    dispatch({
+      type: UPDATE_FAILURE,
+    });
+  }
+};
+
 const selectUserEventsState = (rootState: RooState) => rootState.userEvents;
 
 export const selectUserEventsArray = (rootState: RooState) => {
@@ -165,7 +205,7 @@ const initialState: UserEventsState = {
 
 const userEventsReducer = (
   state: UserEventsState = initialState,
-  action: LoadSuccessAction | CreateSuccessAction | DelteSuccessAction,
+  action: LoadSuccessAction | CreateSuccessAction | DelteSuccessAction | UpdateSuccessAction,
 ) => {
   switch (action.type) {
     case LOAD_SUCCESS:
@@ -197,6 +237,13 @@ const userEventsReducer = (
       };
       delete newState.byIds[id];
       return newState;
+
+    case UPDATE_SUCCESS:
+      const { event: updatedEvent } = action.payload;
+      return {
+        ...state,
+        byIds: { ...state.byIds, [updatedEvent.id]: updatedEvent },
+      };
 
     default:
       return state;
