@@ -6,6 +6,7 @@ import { addZero } from '../../lib/utils';
 import { RooState } from '../../redux/store';
 import { selectUserEventsArray, loadUserEvents, UserEvent } from '../../redux/user-events';
 import './Calendar.css';
+import EventItem from './EventItem';
 
 const mapState = (state: RooState) => ({
   events: selectUserEventsArray(state),
@@ -62,7 +63,7 @@ const Calendar: React.FC<Props> = ({ events, loadUserEvents }) => {
   if (events.length) {
     groupedEvents = groupEventsByDay(events);
     sortedGroupKeys = Object.keys(groupedEvents).sort(
-      (date1, date2) => +new Date(date1) - +new Date(date2),
+      (date1, date2) => +new Date(date2) - +new Date(date1),
     );
   }
   return groupedEvents && sortedGroupKeys ? (
@@ -73,28 +74,16 @@ const Calendar: React.FC<Props> = ({ events, loadUserEvents }) => {
         const day = groupDate.getDate();
         const month = groupDate.toLocaleString(undefined, { month: 'long' });
         return (
-          <div key={dayKey} className="calendar">
-            <div className="calendar-day">
-              <div className="calendar-day-label">
-                <span>
-                  {day}
-                  {' '}
-                  {month}
-                </span>
-              </div>
-              <div className="calendar-events">
-                <>
-                  {eventsArray.map((event) => (
-                    <div key={event.id} className="calendar-event">
-                      <div className="calendar-event-info">
-                        <div className="calendar-event-time">10:00 - 12:00</div>
-                        <div className="calendar-event-title">{event.title}</div>
-                      </div>
-                      <button type="button" className="calendar-event-delete-button">&times;</button>
-                    </div>
-                  ))}
-                </>
-              </div>
+          <div key={dayKey} className="calendar-day">
+            <div className="calendar-day-label">
+              <span>
+                {day}
+                {' '}
+                {month}
+              </span>
+            </div>
+            <div className="calendar-events">
+              {eventsArray.map((event) => <EventItem key={`event_${event.id}`} event={event} />)}
             </div>
           </div>
         );

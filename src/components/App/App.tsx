@@ -7,7 +7,9 @@ function App() {
   return (
     <>
       <Recorder />
-      <Calendar />
+      <div className="calendar">
+        <Calendar />
+      </div>
     </>
   );
 }

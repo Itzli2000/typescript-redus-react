@@ -26,6 +26,7 @@ module.exports = {
     'react/jsx-filename-extension': [2, { extensions: ['.js', '.jsx', '.ts', '.tsx'] }],
     'no-use-before-define': 'off',
     'import/extensions': 0,
+    'react/prop-types': 0,
     // jest rules
     'jest/no-disabled-tests': 'warn',
     'jest/no-focused-tests': 'error',
